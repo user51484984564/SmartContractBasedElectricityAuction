@@ -1,0 +1,151 @@
+<h1 class="title is-5 mt-5">Participated Auctions</h1>
+<p>| <b>Energy Bought: {{qntyBought}} kWh</b> |</p>
+<div *ngIf="loading; then thenBlock else elseBlock"></div>
+<ng-template #thenBlock><button class="button is-small is-info is-loading" (click)="loadAuctionData()">Refresh</button>
+</ng-template>
+<ng-template #elseBlock><button class="button is-small is-info " (click)="loadAuctionData()">Refresh</button>
+</ng-template>
+
+<label class="checkbox ml-5">
+    <input type="checkbox" name="isOngoing" (click)="loadAuctionData()" (click)="setOngoing()">
+    <label for="isOngoing">
+        Show only ongoing Auctions
+    </label>
+</label>
+
+<div *ngIf="isOngoing">
+
+    <table class="table mt-5">
+        <thead>
+            <tr>
+                <th><abbr title="Timeleft">Status</abbr></th>
+                <th><abbr title="Auction">Address</abbr></th>
+                <th><abbr title="Quantity">kWh</abbr></th>
+                <th><abbr title="Bid">Top Bid</abbr></th>
+                <th><abbr title="MyBid">My Bid</abbr></th>
+                <th><abbr title="Actions"></abbr>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody *ngFor="let auctionItem of data; let i = index">
+            <!-- <tr *ngIf="auctionItem.isOwnerLoading"> -->
+            <tr *ngIf="auctionItem.userBids > 0 && auctionItem.isActive">
+                <td>
+                    <div *ngIf="auctionItem.isActive else notActive">
+                        Ongoing (blc: {{auctionItem.timeLeft}})
+                    </div>
+
+                    <ng-template #notActive>
+
+                        <div *ngIf="auctionItem.isSuccessful else notSuccessful">
+                            Ended
+                        </div>
+
+                        <ng-template #notSuccessful>
+                            Failed
+                        </ng-template>
+
+
+                    </ng-template>
+
+                </td>
+                <td>{{helper.Trim(auctionItem.address)}}</td>
+                <td>{{auctionItem.qnty}}</td>
+                <td>{{auctionItem.currentBid}}</td>
+
+                <td>{{auctionItem.userBids}}</td>
+                <!-- <td>{{auctionItem.isSuccessful}}</td> -->
+                <!-- <td>{{auctionItem.isOwnerLoading}}</td> -->
+                <!-- <div *ngIf="auctionItem.isActive; then thenBlock else elseBlock"></div>
+            <ng-template #thenBlock>
+                <td>Active</td>
+            </ng-template>
+            <ng-template #elseBlock>
+                <td>Not Active</td>
+            </ng-template> -->
+                <td>
+                    <div *ngIf="auctionItem.isActive; then thenBlock else elseBlock"></div>
+                    <ng-template #thenBlock> <button class="button is-small is-primary">Take
+                            actions</button></ng-template>
+                    <ng-template #elseBlock> <button class="button is-small is-danger">View
+                            results</button></ng-template>
+                </td>
+            </tr>
+        </tbody>
+
+
+
+    </table>
+</div>
+
+<div *ngIf="!isOngoing">
+
+    <table class="table mt-5">
+        <thead>
+            <tr>
+                <th><abbr title="Timeleft">Status</abbr></th>
+                <th><abbr title="Auction">Address</abbr></th>
+                <th><abbr title="Quantity">kWh</abbr></th>
+                <th><abbr title="Bid">Top Bid</abbr></th>
+                <th><abbr title="MyBid">My Bid</abbr></th>
+                <th><abbr title="Actions"></abbr>Actions</th>
+            </tr>
+        </thead>
+
+        <tbody *ngFor="let auctionItem of data; let i = index">
+            <!-- <tr *ngIf="auctionItem.isOwnerLoading"> -->
+            <tr *ngIf="auctionItem.userBids > 0">
+                <td>
+                    <div *ngIf="auctionItem.isActive else notActive">
+                        Ongoing (blc: {{auctionItem.timeLeft}})
+                    </div>
+
+                    <ng-template #notActive>
+
+                        <div *ngIf="auctionItem.isSuccessful else notSuccessful">
+                            <div *ngIf="auctionItem.currentBid == auctionItem.userBids else notWon">
+                                Ended (Won)
+                            </div>
+
+                            <ng-template #notWon>
+                                Ended (Lost)
+                            </ng-template>
+
+                        </div>
+
+                        <ng-template #notSuccessful>
+                            Failed
+                        </ng-template>
+
+
+                    </ng-template>
+
+                </td>
+                <td>{{helper.Trim(auctionItem.address)}}</td>
+                <td>{{auctionItem.qnty}}</td>
+                <td>{{auctionItem.currentBid}}</td>
+
+                <td>{{auctionItem.userBids}}</td>
+                <!-- <td>{{auctionItem.isSuccessful}}</td> -->
+                <!-- <td>{{auctionItem.isOwnerLoading}}</td> -->
+                <!-- <div *ngIf="auctionItem.isActive; then thenBlock else elseBlock"></div>
+            <ng-template #thenBlock>
+                <td>Active</td>
+            </ng-template>
+            <ng-template #elseBlock>
+                <td>Not Active</td>
+            </ng-template> -->
+                <td>
+                    <div *ngIf="auctionItem.isActive; then thenBlock else elseBlock"></div>
+                    <ng-template #thenBlock> <button class="button is-small is-primary" (click)="openDialog(i)">Take
+                            actions</button></ng-template>
+                    <ng-template #elseBlock> <button class="button is-small is-danger" (click)="openDialog(i)">View
+                            results</button></ng-template>
+                </td>
+            </tr>
+        </tbody>
+
+
+
+    </table>
+</div>

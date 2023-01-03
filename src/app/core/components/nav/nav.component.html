@@ -1,0 +1,35 @@
+<nav class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" routerLink="/">
+            <h3 class="title is-5">Auction Dapp</h3>
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a *ngFor="let item of navItems" [routerLink]="[item.path]" class="navbar-item">
+                {{item.title}}
+            </a>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div *ngIf="walletAddress.length === 0; else elseBlock">Not connected
+                </div>
+                <ng-template #elseBlock>
+                    <div class="navbar-item">
+                        <p>Connected wallet
+                            <b> {{ helper.Trim(walletAddress) }}</b>
+                        </p>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</nav>

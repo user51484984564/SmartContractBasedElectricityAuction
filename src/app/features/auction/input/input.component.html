@@ -1,0 +1,39 @@
+<form class="box mt-5" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <h3 class="title is-5">Create Auction</h3>
+    <div class="field">
+        <label class="label is-small" for="duration">Duration (blocks) </label>
+        <input class="input is-small" type="number" id="duration" name="duration" formControlName="duration">
+    </div>
+    <div class="field">
+        <label class="label is-small" for="max">Max price (auto win) </label>
+        <input class="input is-small" type="number" id="max" name="max" formControlName="max">
+    </div>
+    <div class="field">
+        <label class="label is-small" for="min">Min price (fails if not reached) </label>
+        <input class="input is-small" type="number" id="min" name="min" formControlName="min">
+    </div>
+    <div class="field">
+        <label class="label is-small" for="qnty">Quantity (kWh)</label>
+        <input class="input is-small" type="qnty" id="qnty" name="qnty" formControlName="qnty">
+    </div>
+
+    <!-- <p>
+        <label for="qnty">Qnty (MWh) </label>
+        <input type="number" id="qnty" name="qnty" formControlName="qnty">
+    </p> -->
+
+    <!-- <p>
+        <label for="max">Max price (auto win) </label>
+        <input type="number" id="max" name="max" formControlName="max">
+    </p> -->
+
+    <!-- <p>
+        <label for="min">Min price (fails if not reached) </label>
+        <input type="number" id="min" name="min" formControlName="min">
+    </p> -->
+
+
+
+    <button class="button is-link is-small">Create Auction</button>
+
+</form>

@@ -1,0 +1,148 @@
+<div class="columns">
+    <div class="column is-two-fifths">
+
+
+        <ng-container *ngIf="isSellerViewActive; then thenBlock else elseBlock"></ng-container>
+        <ng-template #thenBlock>
+            <ng-container *ngFor="let auction of auctions; let i = index" (click)="getDetails(i)">
+                <div *ngIf="auction.isLoadedByOwner">
+                    <div *ngIf="auction.auctionState; then thenBlock else elseBlock"></div>
+                    <ng-template #thenBlock>
+                        <div class="button mb-2 is-small is-primary is-fullwidth is-justify-content-flex-start"
+                            (click)="getDetails(i)">
+                            {{i+1}} | {{helper.Trim(auction.id) }} | {{auction.qnty}} kWh
+                            | Blocks left: {{auction.timeLeft}}
+                        </div>
+                    </ng-template>
+                    <ng-template #elseBlock>
+                        <div class="button mb-2 is-small is-danger is-fullwidth is-justify-content-flex-start"
+                            (click)="getDetails(i)">
+                            {{i+1}} | {{helper.Trim(auction.id) }} | {{auction.qnty}} kWh
+                            | Blocks left: {{auction.timeLeft}}
+                        </div>
+                    </ng-template>
+                </div>
+            </ng-container>
+        </ng-template>
+
+        <ng-template #elseBlock>
+            <ng-container *ngFor="let auction of auctions; let i = index" (click)="getDetails(i)">
+                <div *ngIf="auction.auctionState; then thenBlock else elseBlock"></div>
+                <ng-template #thenBlock>
+                    <div class="button mb-2 is-small is-primary is-fullwidth is-justify-content-flex-start"
+                        (click)="getDetails(i)">
+                        {{i+1}} | {{helper.Trim(auction.id) }} | {{auction.qnty}} kWh
+                        | Blocks left: {{auction.timeLeft}}
+                    </div>
+                </ng-template>
+                <ng-template #elseBlock>
+                    <div class="button mb-2 is-small is-danger is-fullwidth is-justify-content-flex-start"
+                        (click)="getDetails(i)">
+                        {{i+1}} | {{helper.Trim(auction.id) }} | {{auction.qnty}} kWh
+                        | Blocks left: {{auction.timeLeft}}
+                    </div>
+                </ng-template>
+
+            </ng-container>
+
+        </ng-template>
+
+
+
+
+
+        <!-- 
+        <ng-container *ngFor="let auction of auctions; let i = index" (click)="getDetails(i)">
+            <div *ngIf="auction.auctionState; then thenBlock else elseBlock"></div>
+            <ng-template #thenBlock>
+                <div class="button mb-2 is-small is-primary is-fullwidth is-justify-content-flex-start"
+                    (click)="getDetails(i)">
+                    {{i+1}} | {{helper.Trim(auction.id) }} | {{auction.qnty}} KWh
+                    | Blocks left: {{auction.timeLeft}}
+                </div>
+            </ng-template>
+            <ng-template #elseBlock>
+                <div class="button mb-2 is-small is-danger is-fullwidth is-justify-content-flex-start"
+                    (click)="getDetails(i)">
+                    {{i+1}} | {{helper.Trim(auction.id) }} | {{auction.qnty}} KWh
+                    | Blocks left: {{auction.timeLeft}}
+                </div>
+            </ng-template>
+
+        </ng-container> -->
+
+        <!-- <div class="button mb-2 is-small" *ngFor="let auction of auctions; let i = index" (click)="getDetails(i)">
+            {{i+1}} | Auction | Running?: {{auction.auctionState}} | {{auction.qnty}} KWh
+            | Blocks left: {{auction.timeLeft}}
+            | IsOwner? {{auction.isLoadedByOwner}}
+        </div> -->
+
+
+    </div>
+    <div class="column is-three-fifths">
+        <div class="box" *ngIf="loading">
+            <h3>Loading...</h3>
+        </div>
+
+        <div class="box" *ngIf="auctionDetails">
+            <h3 class="title is-6"><b>{{selectedContractIndex+1}}. Auction |
+                    <a href="https://goerli.etherscan.io/address/{{auctionDetails.id}}" target="_blank">
+                        {{helper.Trim(auctionDetails.id) }}
+                    </a> |
+                </b> (Blocks Left: <b>{{auctionDetails.blocks}}</b>)
+                <div *ngIf="isAuctionRunning; then thenBlock else elseBlock"></div>
+                <ng-template #thenBlock>
+                    <div class="has-text-success"><b>Active</b></div>
+                </ng-template>
+                <ng-template #elseBlock>
+                    <div class="has-text-danger"><b>Finished</b></div>
+                </ng-template>
+            </h3>
+            <div class="columns">
+
+                <div class="column is-three-fifths">
+                    <h5 class="title is-6">Auction info:</h5>
+                    <p>Min Price: <b>{{auctionDetails.min}}</b> wei</p>
+                    <p>Max Price: <b>{{auctionDetails.max}}</b> wei</p>
+                    <p>Winning address: <b>{{ helper.Trim(auctionDetails.bidder) }}</b></p>
+                    <p>Auction owner: <b>{{ helper.Trim(auctionDetails.own) }}</b></p>
+                    <p>Quantity: <b>{{auctionDetails.qnty}}</b> kWh</p>
+                    <p>Total bids:
+                        <b>{{auctionDetails.getBalance}}</b> wei
+                    </p>
+                </div>
+
+
+                <div class="column is-two-fifths">
+
+                    <h1 class="title is-5 has-text-success">Winning Bid: <b>{{auctionDetails.bid}}</b> wei
+                        <br>({{auctionDetails.unitPrice}}
+                        wei/kWh)
+                    </h1>
+                    <p *ngIf="!auctionDetails.isOwner">Your total bid: <b>{{auctionDetails.userBids}}</b> wei
+                        <br>({{auctionDetails.userUnitPrice}}
+                        wei/kWh)
+                    </p>
+                    <form class="field" appearance="outline" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+
+                        <input *ngIf="!auctionDetails.isOwner && isAuctionRunning" class="input is-small" matInput
+                            placeholder="Increase your bid by... (wei)" type="number" id="bid" name="bid"
+                            formControlName="bid" (ngModelChange)="valuechange($event)">
+                        <p *ngIf="!auctionDetails.isOwner && isAuctionRunning" class="has-text-info">New Bid Value:
+                            <b>{{userTotalBid}}</b>
+                            wei
+                        </p>
+                        <button *ngIf="!auctionDetails.isOwner && isAuctionRunning"
+                            class="button is-link mt-3 is-small">Place Bid</button>
+                        <button *ngIf="timeLeft == 0 || !isAuctionRunning" class="button is-warning is-small mt-3 ml-1"
+                            (click)="finish()">Finalise Auction</button>
+                        <button *ngIf="auctionDetails.isOwner && isAuctionRunning"
+                            class="button is-danger is-small mt-3 ml-1" (click)="cancel()">Cancel</button>
+                    </form>
+
+
+                </div>
+            </div>
+        </div>
+    </div>

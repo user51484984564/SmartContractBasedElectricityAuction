@@ -1,0 +1,78 @@
+<div class="columns">
+    <div class="column is-one-third mt-3 ">
+        <form class="box" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+            <h3 class="title is-5">Meter Data</h3>
+            <div class="columns">
+
+                <div class="column is-one-third ">
+                    <p>Select period: </p>
+                    <div class="select is-info">
+
+                        <select id="period" name="period" formControlName="period">
+                            <option *ngFor="let option of periodOptions" [ngValue]="option">
+                                {{option}}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="column is-two-thirds">
+                    <div class="field">
+                        <label class="label is-small" for="from">From (kWh): </label>
+                        <input class="input is-small" type="number" id="from" name="from" formControlName="from">
+                    </div>
+
+                    <div class="field">
+                        <label class="label is-small" for="to">To (kWh): </label>
+                        <input class="input is-small" type="number" id="to" name="to" formControlName="to">
+                    </div>
+                    <div class="field">
+                        <label class="label is-small" for="generated">Generated (kWh): </label>
+                        <input class="input is-small" type="number" id="generated" name="generated"
+                            formControlName="generated">
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+            <button class="button is-link is-small">Store Data (simulating API)</button>
+
+        </form>
+    </div>
+
+    <div class="column is-two-thirds mt-3 ml-3">
+
+        <div class="box">
+            <h1 class="title is-5 mt-5">Historical meter data</h1>
+
+            <table class="table mt-5">
+                <thead>
+                    <tr>
+                        <th><abbr title="Period">Period (yyyy.mm)</abbr></th>
+                        <th><abbr title="From">From (kWh)</abbr></th>
+                        <th><abbr title="To">To (kWh)</abbr></th>
+                        <th><abbr title="Generated">Generated (kWh)</abbr></th>
+                        <th><abbr title="Balance">Balance (kWh) (+/-)</abbr></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr *ngFor="let data of declarations">
+                        <td>{{data.period}}</td>
+                        <td>{{data.from}}</td>
+                        <td>{{data.to}}</td>
+                        <td>{{data.generated}}</td>
+                        <td>{{data.monthBalance}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h1 class="title is-6">Declared energy balance: <b> {{balanceSum}}</b> kWh</h1>
+
+            <button class="button is-small is-info" *ngIf="declarations.length > 0" (click)="clear()">Delete all records
+                (local storage)</button>
+        </div>
+    </div>
+</div>
